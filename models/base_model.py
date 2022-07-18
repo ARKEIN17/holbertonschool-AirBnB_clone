@@ -14,8 +14,9 @@ class BaseModel:
 
     def __init__(self, *arg, **kwargs):
         """initializes the Basemodel"""
-
-        self.id = str(uuid4())
+        if arg:
+            pass
+        """self.id = str(uuid4())"""
         self.created_at = datetime.isoformat(datetime.now())
         self.updated_at = datetime.isoformat(datetime.now())
         if kwargs:
@@ -25,9 +26,11 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
+            self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
             models.storage.new(self)
+            models.storage.save()
 
     def __str__(self):
         """returns the print of the basemodel"""
@@ -35,14 +38,13 @@ class BaseModel:
 
     def save(self):
         """uptade with the current time"""
+        self.updated_at = datetime.now()
         models.storage.save()
 
-        self.updated_at = datetime.now()
-
     def to_dict(self):
-        """return a dictionary of the basemodel"""
-        diccionario = dict(self.__dict__)
-        diccionario['__class__'] = self.__class__.__name__
-        diccionario['created_at'] = diccionario['created_at'].isoformat()
-        diccionario['updated_at'] = diccionario['updated_at'].isoformat()
-        return diccionario
+        """Returns a dictionary containing all keys/values of the instance"""
+        new_dict = self.__dict__.copy()
+        new_dict["__class__"] = self.__class__.__name__
+        new_dict.update({"created_at": self.created_at.isoformat()})
+        new_dict.update({"updated_at": self.updated_at.isoformat()})
+        return new_dict
