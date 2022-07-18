@@ -5,8 +5,10 @@ Class Basemodel that define all common attributes
 from uuid import uuid4
 from datetime import datetime
 import models
+import uuid
+from datetime import datetime
+from xmlrpc.client import _datetime_type
 from models import storage
-
 
 class BaseModel:
     """
@@ -35,9 +37,10 @@ class BaseModel:
         return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
 
     def save(self):
-        """method updates the updated_at with the current datetime save the objet"""
+        """uptade with the current time"""
+        models.storage.save()
+
         self.updated_at = datetime.now()
-        storage.save()
 
     def to_dict(self):
         """return a dictionary of the basemodel"""
