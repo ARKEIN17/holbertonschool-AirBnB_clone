@@ -7,3 +7,7 @@ class Amenity(BaseModel):
     """amenity"""
 
     name = ""
+
+    def __init__(self, *args, **kwargs):
+        """ initialize """
+        super().__init__(*args, **kwargs)
