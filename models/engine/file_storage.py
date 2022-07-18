@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # convercion de diccionario a json.json
 import json
+import os
 import os.path as path
 from models.base_model import BaseModel
 from models.user import User
@@ -9,6 +10,7 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
+
 
 
 class FileStorage:
@@ -38,19 +40,28 @@ class FileStorage:
             json.dump(new_dict, save)
 
     def reload(self):
-        """reload - deserializes the JSON file to __objects"""
-        from models.amenity import Amenity
+        """deserializes the JSON file to __objects"""
         from models.base_model import BaseModel
+        from models.user import User
+        from models.state import State
         from models.city import City
+        from models.amenity import Amenity
         from models.place import Place
         from models.review import Review
-        from models.state import State
-        from models.user import User
-
-        try:
-            with open(self.__file_path, 'r') as f:
-                for key, value in (json.load(f)).items():
-                    value = eval(value['__class__'])(**value)
-                    self.__objects[key] = value
-        except Exception:
+        list_className = {
+            "BaseModel": BaseModel, "User": User,
+            "State": State, "City": City,
+            "Amenity": Amenity, "Place": Place,
+            "Review": Review}
+        new_dic = {}
+        name_class = ""
+        if os.path.exists(self.__file_path):
+            with open(self.__file_path, 'r', encoding="utf-8") as file_json:
+                new_dic = json.load(file_json)
+                for key, obj in new_dic.items():
+                    name_class = self.parse(key)
+                    new_obj = list_className[name_class](**obj)
+                    new_dic[key] = new_obj
+                self.__objects = new_dic
+        else:
             pass
