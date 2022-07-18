@@ -12,6 +12,7 @@ from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
+import shlex
 
 
 """from models.base_model import BaseModel"""
@@ -45,7 +46,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, arg):
         """create - create method"""
-        arg = arg.split()
+        arg = shlex.split(arg)
         if len(arg) == 0:
             print("** class name missing **")
             return False
@@ -59,8 +60,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         """deploy all"""
-        arg = arg.split()
-        all_objs = models.storage.all()
+        arg = shlex.split(arg)
+        all_objs = storage.all()
         if len(arg) == 0:
             print("** class name missing **")
             return
@@ -76,13 +77,13 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** no instance found **")
             
-    def do_destroy(self, args):
+    def do_destroy(self, arg):
         """Destroy an object"""
-        arg = arg.split()
-        if len(args) == 0:
+        arg = shlex.split(arg)
+        if len(arg) == 0:
             print("** class name missing **")
 
-        elif arg[0] not in HBNBCommand.classes:
+        elif arg[0] not in list_class:
             print("** class doesn't exist **")
         elif len(arg) == 1:
             print("** instance id missing **")
@@ -114,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
                 for obj, value in all_objs.items():
                     if arg == value.to_dict()["__class__"]:
                         instances.append(value.__str__())
-        print(instances)
+            print(instances)
         
     def do_update(self, arg):
         """Update an object"""
@@ -122,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
         if len(arg) == 0:
             print("** class name missing **")
             return
-        splitted_args = arg.split()
+        splitted_args = shlex.split(arg)
         if splitted_args[0] not in list_class:
             print("** class doesn't exist **")
             return
