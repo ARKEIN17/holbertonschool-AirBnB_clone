@@ -5,10 +5,7 @@ Class Basemodel that define all common attributes
 from uuid import uuid4
 from datetime import datetime
 import models
-import uuid
-from datetime import datetime
-from xmlrpc.client import _datetime_type
-from models import storage
+
 
 class BaseModel:
     """
